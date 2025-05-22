@@ -29,6 +29,11 @@ public class FarmerRegisterRequest {
 
 
     }
+
+    public FarmerRegisterRequest() {
+    }
+
+
     public String getFirstName() {
         return firstName;
     }
