@@ -2,6 +2,15 @@ package com.buyit.buyit.dtos.requests;
 
 public class AddProductRequest {
 
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    private Long productId;
     private String productName;
 
     public String getProductName() {

@@ -4,8 +4,10 @@ package com.buyit.buyit.service;
 import com.buyit.buyit.data.model.Product;
 import com.buyit.buyit.data.repository.ProductRepo;
 import com.buyit.buyit.dtos.requests.AddProductRequest;
+import com.buyit.buyit.dtos.requests.DeleteProductRequest;
 import com.buyit.buyit.dtos.requests.SearchByNameRequest;
 import com.buyit.buyit.dtos.response.AddProductResponse;
+import com.buyit.buyit.dtos.response.DeleteProductResponse;
 import com.buyit.buyit.dtos.response.SearchByNameResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,5 +63,43 @@ public class ProductServiceTest {
 
         assertNotNull(response);
         assertEquals("Rice", response.getProductName());
+    }
+
+    @Test
+    void deleteProduct(){
+
+        long productId = 1L;
+
+        Product product = new Product();
+        product.setId(productId);
+        product.setProductName("Rice");
+        product.setProductDescription("A delicious provision for every home");
+        product.setProductPrice(1000);
+
+        DeleteProductRequest request = new DeleteProductRequest();
+        request.setProductId(productId);
+
+        when(productRepo.findById(productId)).thenReturn(Optional.of(product));
+
+        DeleteProductResponse deleteResponse = productService.deleteProduct(request);
+        assertNotNull(deleteResponse);
+        assertEquals("Product deleted successfully", deleteResponse.getMessage());
+    }
+
+    @Test
+    void deleteThrowsException(){
+
+        Long productId = 1L;
+
+        DeleteProductRequest request = new DeleteProductRequest();
+        request.setProductId(productId);
+
+        when(productRepo.findById(productId)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> productService.deleteProduct(request));
+        assertNotNull(exception);
+
+        assertEquals("Product not found", exception.getMessage());
+
     }
 }
